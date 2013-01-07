@@ -115,7 +115,7 @@ class xSetWacom:
 					commands.append("xsetwacom set '" + interface + "' " + button.Callsign + " \"" + result + "\"\n")
 			else:
 				points = GetPressCurve(interface)
-				if points: commands.append("xsetwacom set '" + interface + "' PressCurve " + str(points[0]) + " " + str(points[1]) + " " + str(points[2]) + " " + str(points[3]) + "\n")
+				if points: commands.append("xsetwacom set '" + interface + "' PressureCurve " + str(points[0]) + " " + str(points[1]) + " " + str(points[2]) + " " + str(points[3]) + "\n")
 				result = GetClickForce(interface)
 				if result: commands.append("xsetwacom set '" + interface + "' ClickForce " + str(result) + "\n")
 		# Save configuration to .xsession

@@ -119,7 +119,7 @@ class Main:
 		self.Tablet = self.Tablets[0]
 		# Configure Window
 		
-		self.window.set_size_request(600+self.Tablet.GraphicWidth,400)
+		self.window.set_size_request(800+self.Tablet.GraphicWidth,500)
 		
 		# Attempt to load custom icon for tablet model
 		widget = self.wTree.get_widget("tablet-icon")
@@ -210,6 +210,7 @@ class Main:
 		# Set default button actions
 		widget = self.wTree.get_widget("button-close")
 		widget.connect("button-press-event",self.Close)
+		
 		widget = self.wTree.get_widget("button-help")
 		widget.connect("button-press-event",self.Help,1)
 		self.window.show_all()

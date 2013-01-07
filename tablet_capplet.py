@@ -25,9 +25,9 @@ import math
 def GetPressCurve(devicename):
 
 	try:
-		output = subprocess.Popen(["xsetwacom", "-x", "get", devicename, "PressCurve"], stdout=subprocess.PIPE).communicate()[0]
+		output = subprocess.Popen(["xsetwacom", "-x", "get", devicename, "PressureCurve"], stdout=subprocess.PIPE).communicate()[0]
 		bits = output.split()
-		if bits[1] == "\"PressCurve\"":
+		if bits[1] == "\"PressureCurve\"":
 			return [float(x.replace("\"","")) for x in bits[2:6]]
 	except:
 		return None
@@ -35,7 +35,7 @@ def GetPressCurve(devicename):
 def SetPressCurve(devicename, points):
 
 	try:
-		output = subprocess.Popen(["xsetwacom", "set", devicename, "PressCurve", str(points[0]), str(points[1]), str(points[2]), str(points[3])])
+		output = subprocess.Popen(["xsetwacom", "set", devicename, "PressureCurve", str(points[0]), str(points[1]), str(points[2]), str(points[3])])
 	except:
 		return None
 	
@@ -57,19 +57,26 @@ def SetClickForce(devicename, force):
 	except:
 		return None
 
+ListMode = ["Relative", "Absolute"]
+
 def GetMode(devicename):
 
 	try:
 		output = subprocess.Popen(["xsetwacom", "get", devicename, "Mode"], stdout=subprocess.PIPE).communicate()[0]
-		return int(output.strip())
+		print "GetMode :" + output.strip()
+		for index in range(len(ListMode)):
+			if output.strip() == ListMode[index]:
+				return index
 	except:
 		return None
 
 def SetMode(devicename, m):
 
 	try:
-		output = subprocess.Popen(["xsetwacom", "set", devicename, "Mode", str(m)])
-		return int(output.strip())
+		print "xsetwacom "+ "set "+ devicename + " Mode " + ListMode[m]
+		output = subprocess.Popen(["xsetwacom", "set", devicename, "Mode", ListMode[m]])
+		#return int(output.strip())
+		return output.strip()
 	except:
 		return None
 
