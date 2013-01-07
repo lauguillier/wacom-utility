@@ -11,8 +11,14 @@ class xSetWacom:
 		# List all input devices
 		data = os.popen("xsetwacom --list").readlines()
 		ret = []
+		#ret.append("Wacom Intuos5 M Pen stylus")
+		#ret.append("Wacom Intuos5 M Pen eraser")
+		#ret.append("Wacom Intuos5 M Pen cursor")
+		#ret.append("Wacom Intuos5 M Pen pad")		
 		for device in data:
-			ret.append(' '.join(device.strip().split(" ")[0:-1]))
+			# ret.append(' '.join(device.strip().split(" ")[0:-1]))
+			ret.append(' '.join(device.strip().split(" ")[0:5]))
+			
 		return ret
 
 	def ListModifiers(self):
