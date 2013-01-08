@@ -75,8 +75,8 @@ def SetMode(devicename, m):
 	try:
 		print "xsetwacom "+ "set "+ devicename + " Mode " + ListMode[m]
 		output = subprocess.Popen(["xsetwacom", "set", devicename, "Mode", ListMode[m]])
-		#return int(output.strip())
-		return output.strip()
+		return int(output.strip())
+		#return output.strip()
 	except:
 		return None
 
@@ -201,13 +201,13 @@ class PressureCurveWidget(gtk.DrawingArea):
 	
 	def DragFinished(self):
 		if self.Points != None:
-			if self.DraggingCP1:	# Update to new curve constraints
-				self.Points[3] = self.Points[0]
-				self.Points[2] = self.Points[1]
-			elif self.DraggingCP2:
-				self.Points[0] = self.Points[3]
-				self.Points[1] = self.Points[2]				
-			print int(self.Points[0]), int(100.5 - self.Points[1]), int(self.Points[2]), int(100.5 - self.Points[3])
+			#if self.DraggingCP1:	# Update to new curve constraints
+			#	self.Points[3] = self.Points[0]
+			#	self.Points[2] = self.Points[1]
+			#elif self.DraggingCP2:
+			#	self.Points[0] = self.Points[3]
+			#	self.Points[1] = self.Points[2]
+			#print int(self.Points[0]), int(100.5 - self.Points[1]), int(self.Points[2]), int(100.5 - self.Points[3])
 				
 			SetPressCurve(self.DeviceName, [int(self.Points[0]+.5), int(100.5 - self.Points[1]), int(self.Points[2]+.5), int(100.5 - self.Points[3])])
 		if self.ClickForce != None:
