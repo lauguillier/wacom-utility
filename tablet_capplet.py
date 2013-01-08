@@ -63,7 +63,6 @@ def GetMode(devicename):
 
 	try:
 		output = subprocess.Popen(["xsetwacom", "get", devicename, "Mode"], stdout=subprocess.PIPE).communicate()[0]
-		print "GetMode :" + output.strip()
 		for index in range(len(ListMode)):
 			if output.strip() == ListMode[index]:
 				return index

@@ -1,7 +1,7 @@
 # xsetwacom interface
 import os
 from copy import copy
-from tablet_capplet import GetPressCurve, SetPressCurve, GetClickForce, SetClickForce
+from tablet_capplet import GetPressCurve, SetPressCurve, GetClickForce, SetClickForce, GetMode, ListMode
 
 class xSetWacom:
 	def __init__(self):
@@ -11,13 +11,9 @@ class xSetWacom:
 		# List all input devices
 		data = os.popen("xsetwacom --list").readlines()
 		ret = []
-		#ret.append("Wacom Intuos5 M Pen stylus")
-		#ret.append("Wacom Intuos5 M Pen eraser")
-		#ret.append("Wacom Intuos5 M Pen cursor")
-		#ret.append("Wacom Intuos5 M Pen pad")		
 		for device in data:
-			# ret.append(' '.join(device.strip().split(" ")[0:-1]))
-			ret.append(' '.join(device.strip().split(" ")[0:5]))
+			ret.append(' '.join(device.strip().split("  ")[0:1]))
+			#ret.append(' '.join(device.strip().split(" ")[0:5]))
 			
 		return ret
 
@@ -118,6 +114,8 @@ class xSetWacom:
 				if points: commands.append("xsetwacom set '" + interface + "' PressureCurve " + str(points[0]) + " " + str(points[1]) + " " + str(points[2]) + " " + str(points[3]) + "\n")
 				result = GetClickForce(interface)
 				if result: commands.append("xsetwacom set '" + interface + "' ClickForce " + str(result) + "\n")
+				mode = GetMode(interface)
+				commands.append("xsetwacom set '" + interface + "' Mode " + str(ListMode[mode]) + "\n")
 		# Save configuration to .xsession
 		f1 = open(os.path.expanduser("~/.wacom_utility"), 'a')
 		f1.writelines(commands)
