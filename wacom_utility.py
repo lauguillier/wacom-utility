@@ -196,9 +196,6 @@ class Main:
 		
 		gtk.main()
 
-	def do_donate(self,w,e):
-		import os
-		os.system("gnome-open \"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=YYBBSPYDAA7V8&lc=CA&item_name=Wacom%20Control%20Panel&currency_code=CAD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted\"")
 
 	
 	def Create_Window(self):
@@ -290,13 +287,6 @@ class Main:
 			widget.reparent(self.window)
 			container.pack_end(widget)
 			
-			"""# Set donate button
-			widget = wTree.get_widget("donate-button")
-			imagewidget = wTree.get_widget("donate-button-image")
-			imagewidget.set_from_file("images/btn_donate_LG.png")
-			widget.window.set_cursor(gtk.gdk.Cursor(gtk.gdk.HAND2))
-			widget.connect("button-press-event", self.do_donate)
-			"""
 		
 		elif self.SelectedItem.lower().count("pad"):
 			# Place container for this screen
