@@ -72,12 +72,29 @@ def GetMode(devicename):
 def SetMode(devicename, m):
 
 	try:
-		print "xsetwacom "+ "set "+ devicename + " Mode " + ListMode[m]
+		#print "xsetwacom "+ "set "+ devicename + " Mode " + ListMode[m]
 		output = subprocess.Popen(["xsetwacom", "set", devicename, "Mode", ListMode[m]])
 		return int(output.strip())
 		#return output.strip()
 	except:
 		return None
+
+def SetAccelProfile(device, m):
+
+	try:
+		print "xinput "+ "set-prop \"" + devicename + "\" \"Device Accel Profile\" " + m[0]
+		output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" \"Device Accel Profile\"", m[0]])
+		return int(output.strip())
+		#return output.strip()
+	except:
+		return None
+	
+
+def SetAdapt(devicename, a):
+	#print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Adaptive Deceleration\" " + a
+	output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" --type=float \"Device Accel Adaptive Deceleration\"", a])
+	return int(output.strip())
+
 
 class PressureCurveWidget(gtk.DrawingArea):
 	
@@ -405,6 +422,10 @@ class GraphicsTabletApplet:
 		self.XTilt = self.WidgetTree.get_widget("xtilt")
 		self.YTilt = self.WidgetTree.get_widget("ytilt")
 		
+		self.AccelProfileCombo = self.WidgetTree.get_widget("accelprofilecombo")
+		self.Adapt = self.WidgetTree.get_widget("adapt")
+		self.Const = self.WidgetTree.get_widget("const")		
+		
 		self.Curve = PressureCurveWidget()
 		self.Curve.show()
 		self.PressureVBox.add(self.Curve)
@@ -426,6 +447,8 @@ class GraphicsTabletApplet:
 		self.UpdateDeviceMode()
 
 		self.DeviceModeCombo.connect("changed", self.ModeChanged)
+		self.AccelProfileCombo.connect("changed", self.ProfileChanged)
+		self.Adapt.connect("value-changed", self.AdaptChanged)
 
 		self.DrawingArea.set_extension_events(gtk.gdk.EXTENSION_EVENTS_ALL)
 
@@ -458,9 +481,17 @@ class GraphicsTabletApplet:
 				return (x, y)
 		except:
 			return (0.0, 0.0)
+	
+	def AdaptChanged(self, event):
+		dev = gtk.gdk.devices_list()[self.Device]
+		AdaptAccel = self.Adapt.get_value()
+		SetAdapt(self.DeviceName, str(AdaptAccel))
 			
 	def ModeChanged(self, widget):
 		SetMode(self.DeviceName, widget.get_active())
+	
+	def ProfileChanged(self, widget):
+		SetAccelProfile(self.DeviceName, widget.get_active())
 	
 	def UpdateDeviceMode(self):
 		self.DeviceMode = GetMode(self.DeviceName)
@@ -490,6 +521,7 @@ class GraphicsTabletApplet:
 	
 		self.XTilt.set_adjustment(gtk.Adjustment(t[0], -1.0, 1.0))
 		self.YTilt.set_adjustment(gtk.Adjustment(t[1], -1.0, 1.0))
+		
 		if self.Active:
 			return True
 		else:
