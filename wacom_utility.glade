@@ -898,6 +898,7 @@ Absolute</property>
                           <widget class="GtkComboBox" id="accelprofilecombo">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="active">0</property>
                             <property name="items" translatable="yes">0 classic
 1 none 
 2 device-dependent

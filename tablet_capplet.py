@@ -91,9 +91,18 @@ def SetAccelProfile(device, m):
 	
 
 def SetAdapt(devicename, a):
-	#print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Adaptive Deceleration\" " + a
+	print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Adaptive Deceleration\" " + a
 	output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" --type=float \"Device Accel Adaptive Deceleration\"", a])
-	return int(output.strip())
+	print output
+	return  int(output)
+	#return int(output.strip())
+
+def SetConst(devicename, a):
+	print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Constant Deceleration\" " + a
+	output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" --type=float \"Device Accel Constant Deceleration\"", a])
+	print output
+	return  int(output)
+	#return int(output.strip())
 
 
 class PressureCurveWidget(gtk.DrawingArea):
@@ -449,6 +458,7 @@ class GraphicsTabletApplet:
 		self.DeviceModeCombo.connect("changed", self.ModeChanged)
 		self.AccelProfileCombo.connect("changed", self.ProfileChanged)
 		self.Adapt.connect("value-changed", self.AdaptChanged)
+		self.Const.connect("value-changed", self.ConstChanged)
 
 		self.DrawingArea.set_extension_events(gtk.gdk.EXTENSION_EVENTS_ALL)
 
@@ -484,8 +494,14 @@ class GraphicsTabletApplet:
 	
 	def AdaptChanged(self, event):
 		dev = gtk.gdk.devices_list()[self.Device]
-		AdaptAccel = self.Adapt.get_value()
-		SetAdapt(self.DeviceName, str(AdaptAccel))
+		AdaptDecel = self.Adapt.get_value()
+		SetAdapt(self.DeviceName, str(AdaptDecel))
+	
+	def ConstChanged(self, event):
+		dev = gtk.gdk.devices_list()[self.Device]
+		ConstDecel = self.Const.get_value()
+		SetConst(self.DeviceName, str(ConstDecel))
+
 			
 	def ModeChanged(self, widget):
 		SetMode(self.DeviceName, widget.get_active())
