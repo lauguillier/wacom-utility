@@ -116,6 +116,7 @@ class xSetWacom:
 				if result: commands.append("xsetwacom set '" + interface + "' ClickForce " + str(result) + "\n")
 				mode = GetMode(interface)
 				commands.append("xsetwacom set '" + interface + "' Mode " + str(ListMode[mode]) + "\n")
+				# TODO : ajouter configuration xinput
 		# Save configuration to .xsession
 		f1 = open(os.path.expanduser("~/.wacom_utility"), 'a')
 		f1.writelines(commands)

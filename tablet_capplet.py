@@ -91,17 +91,18 @@ def SetAccelProfile(device, m):
 	
 
 def SetAdapt(devicename, a):
-	print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Adaptive Deceleration\" " + a
-	output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" --type=float \"Device Accel Adaptive Deceleration\"", a])
+	#print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Adaptive Deceleration\" " + a
+	output = subprocess.Popen(["xinput", "set-prop", devicename, "--type=float", "Device Accel Adaptive Deceleration", a])
 	print output
-	return  int(output)
+	#return  int(output)
 	#return int(output.strip())
 
 def SetConst(devicename, a):
-	print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Constant Deceleration\" " + a
-	output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" --type=float \"Device Accel Constant Deceleration\"", a])
+	#print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Constant Deceleration\" " + a
+	dev = devicename
+	output = subprocess.Popen(["xinput", "set-prop", devicename, "--type=float", "Device Accel Constant Deceleration", a])
 	print output
-	return  int(output)
+	#return  int(output)
 	#return int(output.strip())
 
 
