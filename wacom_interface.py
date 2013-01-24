@@ -1,7 +1,7 @@
 # xsetwacom interface
 import os
 from copy import copy
-from tablet_capplet import GetPressCurve, SetPressCurve, GetClickForce, SetClickForce, GetMode, ListMode
+from tablet_capplet import GetPressCurve, SetPressCurve, GetClickForce, SetClickForce, GetMode, ListMode, GetAccelProfile, GetAdapt, GetConst
 
 class xSetWacom:
 	def __init__(self):
@@ -116,7 +116,17 @@ class xSetWacom:
 				if result: commands.append("xsetwacom set '" + interface + "' ClickForce " + str(result) + "\n")
 				mode = GetMode(interface)
 				commands.append("xsetwacom set '" + interface + "' Mode " + str(ListMode[mode]) + "\n")
-				# TODO : ajouter configuration xinput
+				#configuration xinput
+				result = GetAccelProfile(interface)
+				if result != None:
+					cmd = "xinput set-prop '%s' 'Device Accel Profile' %d \n" %(interface, result)
+					commands.append(cmd)
+					adapt= GetAdapt(interface)
+					cmd = "xinput set-prop '%s' --type=float 'Device Accel Adaptive Deceleration' %f \n" %(interface, adapt)
+					commands.append(cmd)
+					const= GetConst(interface)
+					cmd = "xinput set-prop '%s' --type=float 'Device Accel Constant Deceleration' %f\n" %(interface, const)
+					commands.append(cmd)
 		# Save configuration to .xsession
 		f1 = open(os.path.expanduser("~/.wacom_utility"), 'a')
 		f1.writelines(commands)
@@ -135,6 +145,8 @@ class xSetWacom:
 		newdata = copy(data)
 		for line in data:
 			if line[0:9] == "xsetwacom":
+				newdata.remove(line)
+			if line[0:6] == "xinput":
 				newdata.remove(line)
 		f2 = open(os.path.expanduser("~/.wacom_utility"), 'w')
 		f2.writelines(newdata)

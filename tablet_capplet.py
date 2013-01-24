@@ -79,13 +79,24 @@ def SetMode(devicename, m):
 	except:
 		return None
 
-def SetAccelProfile(device, m):
+def SetAccelProfile(devicename, m):
 
 	try:
-		print "xinput "+ "set-prop \"" + devicename + "\" \"Device Accel Profile\" " + m[0]
-		output = subprocess.Popen(["xinput", "set-prop \"", devicename, "\" \"Device Accel Profile\"", m[0]])
+		cmd = "xinput set-prop '%s' 'Device Accel Profile' %d" %(devicename, m)
+		output = os.popen(cmd)
 		return int(output.strip())
-		#return output.strip()
+	except:
+		print "SetAccelProfile except"
+		return None
+		
+def GetAccelProfile(device):
+	try:
+		output = os.popen("xinput list-props '"+device+"'")
+		data = output.readlines()
+		for line in data:
+			if line.find('Device Accel Profile') != -1:
+				data = int(line.split(":")[1])
+				return data
 	except:
 		return None
 	
@@ -97,13 +108,34 @@ def SetAdapt(devicename, a):
 	#return  int(output)
 	#return int(output.strip())
 
+def GetAdapt(device):
+	try:
+		cmd = "xinput list-props '%s'" % device
+		output = os.popen(cmd)
+		data = output.readlines()
+		for line in data:
+			if line.find('Adaptive Deceleration') != -1:
+				data = float(line.split(":")[1])
+				return data
+	except:
+		return 1.0
+
+
 def SetConst(devicename, a):
-	#print "xinput "+ "set-prop \"" + devicename + "\" --type=float \"Device Accel Constant Deceleration\" " + a
-	dev = devicename
 	output = subprocess.Popen(["xinput", "set-prop", devicename, "--type=float", "Device Accel Constant Deceleration", a])
-	print output
-	#return  int(output)
-	#return int(output.strip())
+	return int(output.strip())
+
+def GetConst(device):
+	try:
+		cmd = "xinput list-props '%s'" % device
+		output = os.popen(cmd)
+		data = output.readlines()
+		for line in data:
+			if line.find('Constant Deceleration') != -1:
+				data = float(line.split(":")[1])
+				return data
+	except:
+		return 1.0
 
 
 class PressureCurveWidget(gtk.DrawingArea):
@@ -455,6 +487,9 @@ class GraphicsTabletApplet:
 		self.DeviceName = gtk.gdk.devices_list()[self.Device].name
 		self.Curve.SetDevice(self.DeviceName)
 		self.UpdateDeviceMode()
+		self.UpdateDeviceProfile()
+		self.UpdateAdapt()
+		self.UpdateConst()
 
 		self.DeviceModeCombo.connect("changed", self.ModeChanged)
 		self.AccelProfileCombo.connect("changed", self.ProfileChanged)
@@ -468,6 +503,7 @@ class GraphicsTabletApplet:
 		self.InLoop = 1
 		self.DeviceName = gtk.gdk.devices_list()[self.Device].name
 		self.UpdateDeviceMode()
+		self.UpdateDeviceProfile()
 		gobject.timeout_add(20, self.Update)
 
 	def Stop(self):
@@ -518,12 +554,31 @@ class GraphicsTabletApplet:
 			self.DeviceModeCombo.set_sensitive(True)
 			self.DeviceModeCombo.set_active(self.DeviceMode)
 	
+	def UpdateDeviceProfile(self):
+		self.DeviceProfile = GetAccelProfile(self.DeviceName)
+		if self.DeviceProfile == None:
+			self.AccelProfileCombo.set_sensitive(False)
+		else:
+			self.AccelProfileCombo.set_sensitive(True)
+			self.AccelProfileCombo.set_active(self.DeviceProfile)
+
+	def UpdateAdapt(self):
+		AdaptDecel = GetAdapt(self.DeviceName)
+		#print "Adapt : %f" % AdaptDecel
+		self.Adapt.set_value(AdaptDecel)		
+
+	def UpdateConst(self):
+		ConstDecel = GetConst(self.DeviceName)
+		#print "Const : %f" % ConstDecel
+		self.Const.set_value(ConstDecel)		
+	
 	def DeviceSelected(self, widget):
 		self.Device = widget.get_active()
 		self.DrawingArea.Device = self.Device
 		self.DeviceName = gtk.gdk.devices_list()[self.Device].name
 		self.Curve.SetDevice(self.DeviceName)
 		self.UpdateDeviceMode()
+		self.UpdateDeviceProfile()
 
 	def Update(self):
 		p = self.GetPressure()
