@@ -461,6 +461,9 @@ class GraphicsTabletApplet:
 		self.DrawingTestFrame = self.WidgetTree.get_widget("drawingalignment")
 		self.PressureVBox = self.WidgetTree.get_widget("pressurevbox")
 		self.DeviceModeCombo = self.WidgetTree.get_widget("devicemodecombo")
+		self.HomotheticMapCheck = self.WidgetTree.get_widget("homotheticmap")
+		self.XScreenX = self.WidgetTree.get_widget("xscreenx")
+		self.XScreenY = self.WidgetTree.get_widget("xscreeny")
 		self.XTilt = self.WidgetTree.get_widget("xtilt")
 		self.YTilt = self.WidgetTree.get_widget("ytilt")
 		

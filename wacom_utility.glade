@@ -686,7 +686,7 @@ Absolute</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <widget class="GtkCheckButton" id="HomotheticMap">
+                          <widget class="GtkCheckButton" id="homotheticmap">
                             <property name="label" translatable="yes">Homothetic Mapping</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -716,7 +716,7 @@ Absolute</property>
                                     <property name="can_focus">False</property>
                                     <property name="left_padding">12</property>
                                     <child>
-                                      <widget class="GtkLabel" id="XscrrenX">
+                                      <widget class="GtkLabel" id="xscreenx">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">0000</property>
@@ -754,7 +754,7 @@ Absolute</property>
                                     <property name="can_focus">False</property>
                                     <property name="left_padding">12</property>
                                     <child>
-                                      <widget class="GtkLabel" id="XscreenY">
+                                      <widget class="GtkLabel" id="xscreeny">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="label" translatable="yes">0000</property>
