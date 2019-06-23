@@ -39,10 +39,10 @@ def SetPressCurve(devicename, points):
 	except:
 		return None
 	
-def GetClickForce(devicename):
+def GetThreshold(devicename):
 
 	try:
-		output = subprocess.Popen(["xsetwacom", "get", devicename, "ClickForce"], stdout=subprocess.PIPE).communicate()[0]
+		output = subprocess.Popen(["xsetwacom", "get", devicename, "Threshold"], stdout=subprocess.PIPE).communicate()[0]
 		if len(output.strip()) == 0:
 			return None
 		else:
@@ -50,10 +50,10 @@ def GetClickForce(devicename):
 	except:
 		return None
 
-def SetClickForce(devicename, force):
+def SetThreshold(devicename, force):
 
 	try:
-		output = subprocess.Popen(["xsetwacom", "set", devicename, "ClickForce", str(force)])
+		output = subprocess.Popen(["xsetwacom", "set", devicename, "Threshold", str(force)])
 	except:
 		return None
 
@@ -153,7 +153,7 @@ class PressureCurveWidget(gtk.DrawingArea):
 		self.WindowSize = None
 		self.Scale = None
 		
-		self.ClickForce = None
+		self.Threshold = None
 		
 		self.DeviceName = ""
 		
@@ -172,10 +172,10 @@ class PressureCurveWidget(gtk.DrawingArea):
 
 	def SetDevice(self, name):
 		self.DeviceName = name
-		self.ClickForce = GetClickForce(name)
+		self.Threshold = GetThreshold(name)
 		
-		if self.ClickForce != None:
-			self.ClickForce *= (100.0 / 19.0)
+		if self.Threshold != None:
+			self.Threshold *= (100.0 / 19.0)
 			
 		points = GetPressCurve(name)
 		if points == None:
@@ -221,7 +221,7 @@ class PressureCurveWidget(gtk.DrawingArea):
 		
 		elif self.DraggingCF:
 			
-			self.ClickForce = int(self.ClampValue(pos[0]) / (100.0 / 19)) * (100.0 / 19)
+			self.Threshold = int(self.ClampValue(pos[0]) / (100.0 / 19)) * (100.0 / 19)
 	
 	def ButtonPress(self, widget, event):
 		
@@ -248,7 +248,7 @@ class PressureCurveWidget(gtk.DrawingArea):
 					self.DraggingCP2 = True
 					return
 			
-			if pos[0] > self.ClickForce - self.ControlPointDiameter and pos[0] < self.ClickForce + self.ControlPointDiameter:
+			if pos[0] > self.Threshold - self.ControlPointDiameter and pos[0] < self.Threshold + self.ControlPointDiameter:
 				
 				self.DraggingCF = True
 				return
@@ -268,8 +268,8 @@ class PressureCurveWidget(gtk.DrawingArea):
 			#print int(self.Points[0]), int(100.5 - self.Points[1]), int(self.Points[2]), int(100.5 - self.Points[3])
 				
 			SetPressCurve(self.DeviceName, [int(self.Points[0]+.5), int(100.5 - self.Points[1]), int(self.Points[2]+.5), int(100.5 - self.Points[3])])
-		if self.ClickForce != None:
-			SetClickForce(self.DeviceName, int(self.ClickForce / (100.0 / 19.0)) + 1)
+		if self.Threshold != None:
+			SetThreshold(self.DeviceName, int(self.Threshold / (100.0 / 19.0)) + 1)
 		self.DraggingCP1 = self.DraggingCP2 = self.DraggingCF = False
 		
 
@@ -310,14 +310,14 @@ class PressureCurveWidget(gtk.DrawingArea):
 			
 			# Click Force
 			
-			if self.ClickForce != None:
+			if self.Threshold != None:
 				cr.set_line_width(1.0)
 				cr.set_source_rgba(1.0, 0.0, 0.0, 0.25)
 				cr.save()
 				cr.scale(self.Scale[0], self.Scale[1])
 				cr.new_path()
-				cr.move_to(self.ClickForce, 0.0)
-				cr.line_to(self.ClickForce, 100.0)
+				cr.move_to(self.Threshold, 0.0)
+				cr.line_to(self.Threshold, 100.0)
 				cr.restore()
 				cr.stroke()
 				

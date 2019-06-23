@@ -1,7 +1,7 @@
 # xsetwacom interface
 import os
 from copy import copy
-from tablet_capplet import GetPressCurve, SetPressCurve, GetClickForce, SetClickForce, GetMode, ListMode, GetAccelProfile, GetAdapt, GetConst
+from tablet_capplet import GetPressCurve, SetPressCurve, GetThreshold, SetThreshold, GetMode, ListMode, GetAccelProfile, GetAdapt, GetConst
 
 class xSetWacom:
 	def __init__(self):
@@ -112,8 +112,8 @@ class xSetWacom:
 			else:
 				points = GetPressCurve(interface)
 				if points: commands.append("xsetwacom set '" + interface + "' PressureCurve " + str(int(points[0])) + " " + str(int(points[1])) + " " + str(int(points[2])) + " " + str(int(points[3])) + "\n")
-				result = GetClickForce(interface)
-				if result: commands.append("xsetwacom set '" + interface + "' ClickForce " + str(result) + "\n")
+				result = GetThreshold(interface)
+				if result: commands.append("xsetwacom set '" + interface + "' Threshold " + str(result) + "\n")
 				mode = GetMode(interface)
 				commands.append("xsetwacom set '" + interface + "' Mode " + str(ListMode[mode]) + "\n")
 				#configuration xinput
