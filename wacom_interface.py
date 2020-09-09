@@ -42,7 +42,7 @@ class xSetWacom:
 		elif len(data) == 1 and int(data) > 0:
 			return 1, self.LookUpMouseButton(int(data))
 		else:
-			return 2, data.replace("CORE KEY ","")
+			return 2, data.replace("KEY ","")
 			
 	def LookUpMouseButton(self,button):
 		if button == 1:
@@ -75,7 +75,7 @@ class xSetWacom:
 		elif type == 1:
 			function = "\'" + self.LookUpMouseName(name) + "\'"
 		elif type == 2:
-			function = "\"CORE KEY " + name + "\""
+			function = "\"KEY " + name + "\""
 		elif type == 3:
 			function = "\'TPCButton " + name + "\'"
 		print "xsetwacom set '" + device + "' " + object + " " + function
