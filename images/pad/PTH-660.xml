@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<padsettings graphicwidth="284">
+	<button name="Button 1" number="1" callsign="Button 1">
+		<x1>50</x1>
+		<y1>10</y1>
+		<x2>82</x2>
+		<y2>34</y2>
+	</button>
+	<button name="Button 2" number="2" callsign="Button 2">
+		<x1>50</x1>
+		<y1>46</y1>
+		<x2>82</x2>
+		<y2>70</y2>
+	</button>
+	<button name="Button 3" number="3" callsign="Button 3">
+		<x1>50</x1>
+		<y1>82</y1>
+		<x2>82</x2>
+		<y2>106</y2>
+    </button>
+    <!---
+	<button name="Button 4" number="4" callsign="Button4">
+		<x1>25</x1>
+		<y1>73</y1>
+		<x2>81</x2>
+		<y2>97</y2>
+	</button>
+	<button name="Button 5" number="5" callsign="Button5">
+		<x1>25</x1>
+		<y1>98</y1>
+		<x2>81</x2>git reset HEAD^
+		<y2>122</y2>
+	</button>
+	<button name="Button 6" number="6" callsign="Button6">
+		<x1>25</x1>
+		<y1>300</y1>
+		<x2>81</x2>
+		<y2>325</y2>
+	</button>
+	<button name="Button 7" number="7" callsign="Button7">
+		<x1>25</x1>
+		<y1>326</y1>
+		<x2>81</x2>
+		<y2>351</y2>
+    </button>
+    -->
+	<button name="Button 8" number="8" callsign="Button 8">
+		<x1>50</x1>
+		<y1>118</y1>
+		<x2>82</x2>
+		<y2>142</y2>
+	</button>
+	<button name="Button 9" number="9" callsign="Button 9">
+		<x1>50</x1>
+		<y1>318</y1>
+		<x2>82</x2>
+		<y2>342</y2>
+	</button>
+	<button name="Button 10" number="10" callsign="Button 10">
+		<x1>50</x1>
+		<y1>354</y1>
+		<x2>82</x2>
+		<y2>378</y2>
+	</button>
+	<button name="Button 11" number="11" callsign="Button 11">
+		<x1>50</x1>
+		<y1>390</y1>
+		<x2>82</x2>
+		<y2>414</y2>
+	</button>
+	<button name="Button 12" number="12" callsign="Button 12">
+		<x1>50</x1>
+		<y1>426</y1>
+		<x2>82</x2>
+		<y2>450</y2>
+	</button>
+	<button name="Button 13" number="13" callsign="Button 13">
+		<x1>50</x1>
+		<y1>218</y1>
+		<x2>82</x2>
+		<y2>242</y2>
+    </button>
+    <button name="Touch Wheel Up" number="14" callsign="AbsWheelUp">
+        <x1>50</x1>
+        <y1>186</y1>
+        <x2>82</x2>
+        <y2>210</y2>
+    </button>
+    <button name="Touch Wheel Down" number="15" callsign="AbsWheelDown">
+        <x1>50</x1>
+        <y1>250</y1>
+        <x2>82</x2>
+        <y2>274</y2>
+    </button>
+</padsettings>

@@ -12,8 +12,8 @@ class xSetWacom:
 		data = os.popen("xsetwacom --list").readlines()
 		ret = []
 		for device in data:
-			ret.append(' '.join(device.strip().split("  ")[0:1]))
-			#ret.append(' '.join(device.strip().split(" ")[0:5]))
+			#ret.append(' '.join(device.strip().split("  ")[0:1]))
+			ret.append(' '.join(device.strip().split(" ")[0:6]))
 			
 		return ret
 
