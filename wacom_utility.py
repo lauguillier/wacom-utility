@@ -17,7 +17,7 @@ from copy import copy
 
 from wacom_identify import TabletIdClass
 from wacom_interface import xSetWacom
-import wacom_xorg
+# import wacom_xorg
 from dialogbox import DialogBox
 from cairo_framework import Pad
 from tablet_capplet import GraphicsTabletApplet
@@ -187,11 +187,11 @@ class Main:
 		
 		# Check for old xorg.conf configuration and offer to remove it
 		
-		if wacom_xorg.CheckXorgConfig()[0]:
-			self.DialogBox.NewMessage("<b>Wacom Control Panel has detected an old configuration</b>\n\nWacom Control Panel now supports the new hotplugging support introduced with Ubuntu 9.04. Your xorg.conf contains tablet configuration that must be removed in order to use these new features. Clicking ok will remove these settings for you. Please enter your password if required to do so.\n\n<b>Your tablet will work as normal again after you log out and log back in again.</b>","Update old configuration")
-			wacom_xorg.SetXorgConfig(0)
-			os.system("/bin/sh -c 'gnome-session-save --logout-dialog' &")
-			sys.exit()
+#		if wacom_xorg.CheckXorgConfig()[0]:
+#			self.DialogBox.NewMessage("<b>Wacom Control Panel has detected an old configuration</b>\n\nWacom Control Panel now supports the new hotplugging support introduced with Ubuntu 9.04. Your xorg.conf contains tablet configuration that must be removed in order to use these new features. Clicking ok will remove these settings for you. Please enter your password if required to do so.\n\n<b>Your tablet will work as normal again after you log out and log back in again.</b>","Update old configuration")
+#			wacom_xorg.SetXorgConfig(0)
+#			os.system("/bin/sh -c 'gnome-session-save --logout-dialog' &")
+#			sys.exit()
 		# Gtk main loop
 		
 		gtk.main()
@@ -238,7 +238,7 @@ class Main:
 			self.ChangeSettingFile("configureonlogin",value)
 			self.ConfigureOnLogin=value
 		elif setting==2:
-			wacom_xorg.SetXorgConfig(value)
+#			wacom_xorg.SetXorgConfig(value)
 			self.DialogBox.NewMessage("You need to log out and log back in again for the new configuration to take effect.\n\nA backup has been made in your home directory.","Wacom Control Panel")
 			self.ChangeScreen()
 	
