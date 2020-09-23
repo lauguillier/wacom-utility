@@ -1,15 +1,16 @@
 # Dialog Box Class
 
 # Dialog Box
-import gtk
-import gtk.glade
+#import gtk
+#import gtk.glade
+import gi
 
 class DialogBox:
 	def __init__(self,parent,wTree):
 		# Set the Glade file
 		self.wTree = wTree
 		# Load pointer for dialog box
-		self.window = self.wTree.get_widget("dialogbox")
+		self.window = self.wTree.get_object("dialogbox")
 		self.window.set_title("Wacom Control Panel")
 		self.window.set_transient_for(parent)
 		self.window.set_destroy_with_parent(True)
@@ -19,11 +20,11 @@ class DialogBox:
 		self.window.set_skip_pager_hint(1)
 		
 		#self.window.present()
-		self.label = self.wTree.get_widget("dialoglbl")
+		self.label = self.wTree.get_object("dialoglbl")
 		#self.label.set_text(message)
 		self.window.connect("destroy",self.callbackYes)
 		self.window.connect("key-press-event", self.keydown)
-		self.button2 = self.wTree.get_widget("dialogyes")
+		self.button2 = self.wTree.get_object("dialogyes")
 		self.button2.connect("button-press-event",self.callbackYes)
 		#gtk.main()
 

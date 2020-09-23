@@ -1,11 +1,14 @@
 # Some cairo magic, thanks goes to Michael Urman for tutorials
 
-import gtk
-import cairo
+#import gtk
+#import cairo
+import gi
+from gi.repository import Gtk
+gi.require_version('Gtk', '3.0')
 import os
 
-class DrawingArea(gtk.DrawingArea):
-    __gsignals__ = { "expose-event": "override" }
+class DrawingArea(Gtk.DrawingArea):
+    #__gsignals__ = { "expose-event": "override" }
     def do_expose_event(self, event):
 
         cr = self.window.cairo_create()

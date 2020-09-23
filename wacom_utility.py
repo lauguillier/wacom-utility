@@ -3,15 +3,18 @@
 # Dep: pygtk python-xml.dom.minidom wacom-tools
 
 import sys
-import gtk
-import pygtk
-import gobject
-import gtk.glade
-import cairo
-import pango
+#import gtk
+#import pygtk
+import gi
+#import gobject
+#import gtk.glade
+#import cairo
+#import pango
 import os
 import gc
 from copy import copy
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 # Import local modules
 
@@ -74,13 +77,13 @@ class Main:
 		
 		# If no tablets identified
 		if len(self.Tablets) == 0:
-			widget = self.wTree.get_widget("tablet-icon")
+			widget = self.wTree.get_object("tablet-icon")
 			file = "images/generic.png"
 			widget.set_from_file(file)
 			# Set tablet name
-			widget = self.wTree.get_widget("tablet-label")
+			widget = self.wTree.get_object("tablet-label")
 			widget.set_label("No graphics tablets detected")
-			gtk.main()
+			Gtk.main()
 			return
 		# Check for autostart desktop file, if not present, generate it
 		try:
@@ -122,7 +125,7 @@ class Main:
 		self.window.set_size_request(800+self.Tablet.GraphicWidth,500)
 		
 		# Attempt to load custom icon for tablet model
-		widget = self.wTree.get_widget("tablet-icon")
+		widget = self.wTree.get_object("tablet-icon")
 		try:
 			file = "images/"+self.Tablet.Model+".png"
 			os.stat(file)
@@ -131,103 +134,109 @@ class Main:
 		widget.set_from_file(file)
 		
 		# Set tablet name
-		widget = self.wTree.get_widget("tablet-label")
+		widget = self.wTree.get_object("tablet-label")
 		widget.set_label(self.Tablet.Name)
 		
 		# Set up treeview list for input devices
 		devices = self.xSetWacomObject.ListInterfaces()
-		widget = self.wTree.get_widget("input-list")
-		widget.connect("cursor-changed",self.SelectDevice)
-		list = gtk.ListStore(str)
-		col = gtk.TreeViewColumn("Input Device")
+		widget = self.wTree.get_object("input-list")
+		
+		list = Gtk.ListStore(str)
+		col = Gtk.TreeViewColumn("Input Device")
 		widget.append_column(col)
-		celltext = gtk.CellRendererText()
-		col.pack_start(celltext)
+		celltext = Gtk.CellRendererText()
+		col.pack_start(celltext, False)
 		col.add_attribute(celltext,'text',0)
 		widget.set_model(list)
 		for device in devices:
 			list.append([device])
 		list.append(["options"])
+		widget.connect("cursor-changed",self.SelectDevice)
 		
 		# Set up selection of modifiers
-		widget = self.wTree.get_widget("availkeys")
-		list = gtk.ListStore(str, str)
+		widget = self.wTree.get_object("availkeys")
+		list = Gtk.ListStore(str, str)
 		widget.set_model(list)
 		data = self.xSetWacomObject.ListModifiers()
 		for item in data:
 			list.append(item)
-		celltext = gtk.CellRendererText()
-		widget.pack_start(celltext)
+		celltext = Gtk.CellRendererText()
+		widget.pack_start(celltext, False)
 		widget.add_attribute(celltext,'text',1)
 		widget.set_active(0)
 		# Set up modify action window
-		self.ModKeyWindow = self.wTree.get_widget("ModifyKey")
+		self.ModKeyWindow = self.wTree.get_object("ModifyKey")
 		self.ModKeyWindow.set_title("Edit Button Action")
 		self.ModKeyWindow.set_transient_for(self.window)
 		# Set up radio buttons
-		widget0 = self.wTree.get_widget("rb1")
-		widget1 = self.wTree.get_widget("rb2")
-		widget1.set_group(widget0)
-		widget2 = self.wTree.get_widget("rb3")
-		widget2.set_group(widget0)
+		widget0 = self.wTree.get_object("rb1")
+		widget1 = self.wTree.get_object("rb2")
+		#widget1.set_group(widget0)
+		widget2 = self.wTree.get_object("rb3")
+		#widget2.set_group(widget0)
 		
 		# Set up selection of mouse actions
-		widget = self.wTree.get_widget("MouseConfig")
-		list = gtk.ListStore(str, str)
+		widget = self.wTree.get_object("MouseConfig")
+		list = Gtk.ListStore(str, str)
 		widget.set_model(list)
 		data = self.xSetWacomObject.ListMouseActions()
 		for item in data:
 			list.append(item)
-		celltext = gtk.CellRendererText()
-		widget.pack_start(celltext)
+		celltext = Gtk.CellRendererText()
+		widget.pack_start(celltext, False)
 		widget.add_attribute(celltext,'text',1)
 		widget.set_active(0)
-		widget = self.wTree.get_widget("modhelp")
-		widget.connect("button-press-event",self.Help,2)
-		
+		#widget = self.wTree.get_object("modhelp")
+		#widget.connect("button-press-event",self.Help,2)
 		# Check for old xorg.conf configuration and offer to remove it
-		
-#		if wacom_xorg.CheckXorgConfig()[0]:
-#			self.DialogBox.NewMessage("<b>Wacom Control Panel has detected an old configuration</b>\n\nWacom Control Panel now supports the new hotplugging support introduced with Ubuntu 9.04. Your xorg.conf contains tablet configuration that must be removed in order to use these new features. Clicking ok will remove these settings for you. Please enter your password if required to do so.\n\n<b>Your tablet will work as normal again after you log out and log back in again.</b>","Update old configuration")
-#			wacom_xorg.SetXorgConfig(0)
-#			os.system("/bin/sh -c 'gnome-session-save --logout-dialog' &")
-#			sys.exit()
-		# Gtk main loop
-		
-		gtk.main()
-
+		'''
+		if wacom_xorg.CheckXorgConfig()[0]:
+			self.DialogBox.NewMessage("<b>Wacom Control Panel has detected an old configuration</b>\n\nWacom Control Panel now supports the new hotplugging support introduced with Ubuntu 9.04. Your xorg.conf contains tablet configuration that must be removed in order to use these new features. Clicking ok will remove these settings for you. Please enter your password if required to do so.\n\n<b>Your tablet will work as normal again after you log out and log back in again.</b>","Update old configuration")
+			wacom_xorg.SetXorgConfig(0)
+			os.system("/bin/sh -c 'gnome-session-save --logout-dialog' &")
+			sys.exit()
+		'''
+		# Gtk main loop		
+		Gtk.main()
 
 	
 	def Create_Window(self):
 		# Create widgets
-		self.wTree = gtk.glade.XML("wacom_utility.glade")
-		self.window = self.wTree.get_widget("window1")
+		#self.wTree = Gtk.glade.XML("wacom_utility.glade")
+		self.wTree = Gtk.Builder()
+		self.wTree.add_from_file("wacom_utility.glade")
+		self.window = self.wTree.get_object("window1")
 		self.window.set_title("Wacom Tablet Configuration")
 		self.window.connect("destroy",self.Close)
 		# Set default button actions
-		widget = self.wTree.get_widget("button-close")
+		widget = self.wTree.get_object("button-close")
 		widget.connect("button-press-event",self.Close)
 		
-		widget = self.wTree.get_widget("button-help")
+		# Help removed
+		'''
+		widget = self.wTree.get_object("button-help")
 		widget.connect("button-press-event",self.Help,1)
+		'''
 		self.window.show_all()
 		self.DialogBox = DialogBox(self.window,self.wTree)
 		self.SelectedItem = "Welcome Screen"
 		self.ChangeScreen()
 	
+	'''
 	def Help(self,widget,event,page):
 		#Page = 1: Main help
 		#Page = 2: Pad settings help
 		# Fixme: help not yet implamented
 		os.system("/bin/sh -c \"gnome-open 'http://www.gtk-apps.org/content/show.php/Wacom+Control+Panel?content=104309'\"")
-	
+	'''
+
 	def Close(self, widget=None,event=None):
 		if self.SaveConfig == 1:
 			if self.Tablet:
 				self.xSetWacomObject.SaveToXSession(self.Tablet)
 		else:
 			self.xSetWacomObject.PurgeXSession()
-		gtk.main_quit()
+		Gtk.main_quit()
 	
 	def CheckBoxClick(self,widget,setting):
 		value = int(widget.get_active())
@@ -262,14 +271,16 @@ class Main:
 
 	def SelectDevice(self,widget):
 		Dataset = widget.get_model()
-		Index = widget.get_cursor()
-		activerow = Index[0][0]
-		self.SelectedItem = Dataset[activerow][0]
+		if Dataset is not None:
+			Index = widget.get_cursor()
+			if Index is not None:
+				activerow = Index[0][0]
+			self.SelectedItem = Dataset[activerow][0]
 		self.ChangeScreen()
 	
 	
 	def ChangeScreen(self):
-		container = self.wTree.get_widget("mainbox")
+		container = self.wTree.get_object("mainbox")
 		if len(container.get_children()) == 2:
 			container.remove(container.get_children()[1])
 		if self.PressureMachine:
@@ -280,39 +291,40 @@ class Main:
 			# Removing its gdk.window reference
 
 		# Get a second copy of the tree structure
-		wTree = gtk.glade.XML("wacom_utility.glade")
+		wTree = Gtk.Builder()
+		wTree.add_from_file("wacom_utility.glade")
 		if self.SelectedItem == "Welcome Screen":
 			# Place container for this screen
-			widget = wTree.get_widget("WelcomeScreen")
+			widget = wTree.get_object("WelcomeScreen")
 			widget.reparent(self.window)
-			container.pack_end(widget)
+			container.pack_end(widget,False,False, 0)
 			
 		
 		elif self.SelectedItem.lower().count("pad"):
 			# Place container for this screen
-			widget = wTree.get_widget("PadContainer")
+			widget = wTree.get_object("PadContainer")
 			widget.reparent(self.window)
-			container.pack_end(widget)
+			container.pack_end(widget, False, False, 0)
 
 			# Configures Pad Graphic
 			widget = Pad()
 			widget.Set_Parameters(self.Tablet)
 			widget.set_size_request(self.Tablet.GraphicWidth,-1)
-			container = wTree.get_widget("padbox")
-			container.pack_start(widget)
+			container = wTree.get_object("padbox")
+			container.pack_start(widget,0,0,0)
 			widget.show()
 			
 			# Configures button maps
-			container = wTree.get_widget("padbuttonlist")
+			container = wTree.get_object("padbuttonlist")
 			for item in self.Tablet.Buttons:
-				placeholder = gtk.HBox()
-				widget1 = gtk.Label()
+				placeholder = Gtk.HBox()
+				widget1 = Gtk.Label()
 				widget1.set_use_markup(True)
 				widget1.set_markup("<span foreground='#000000' font_desc='sans 18' stretch='normal' weight='normal'>"+str(item.Number)+"</span>")
 				
-				widget2 = gtk.Label(item.Name)
-				widget3 = gtk.Label(self.xSetWacomObject.GetTypeAndName(self.SelectedItem, item.Callsign)[1])
-				widget4 = gtk.Button(stock="gtk-edit")
+				widget2 = Gtk.Label(item.Name)
+				widget3 = Gtk.Label(self.xSetWacomObject.GetTypeAndName(self.SelectedItem, item.Callsign)[1])
+				widget4 = Gtk.Button(stock="gtk-edit")
 				widget4.connect("button-press-event",self.ShowModWindow, item)
 				placeholder.pack_start(widget1,0,0,4)
 				placeholder.pack_start(widget2,0,0,4)
@@ -323,18 +335,18 @@ class Main:
 			
 		elif self.SelectedItem == "options":
 			# Place container for this screen
-			widget = wTree.get_widget("OptionsContainer")
+			widget = wTree.get_object("OptionsContainer")
 			widget.reparent(self.window)
-			container.pack_end(widget)
+			container.pack_end(widget, False, False, 0)
 			# Configure events on options page
-			widget = wTree.get_widget("applyonstartup")
+			widget = wTree.get_object("applyonstartup")
 			widget.set_active(self.ConfigureOnLogin)
 			widget.connect("toggled",self.CheckBoxClick,1)
 		else:
 			# Place container for this screen
-			widget = wTree.get_widget("PressureContainer")
+			widget = wTree.get_object("PressureContainer")
 			widget.reparent(self.window)
-			container.pack_end(widget)
+			container.pack_end(widget, False, False, 0)
 			self.PressureMachine = GraphicsTabletApplet(self.window, wTree, self.SelectedItem)
 			self.PressureMachine.Run()
 			
@@ -354,34 +366,36 @@ class ModifyAction:
 		self.xSetWacomObject = xSetWacomObject
 		self.Events = []
 		# Display Window
-		self.window = self.wTree.get_widget("ModifyKey")
+		self.window = self.wTree.get_object("ModifyKey")
 		ev = self.window.connect("delete-event",self.close)
 		self.Events.append([self.window,ev])
 		# Connect events
-		widget = self.wTree.get_widget("modclose")
+		widget = self.wTree.get_object("modclose")
 		ev = widget.connect("button-press-event", self.close)
 		self.Events.append([widget, ev])
-		widget = self.wTree.get_widget("addaction")
+		widget = self.wTree.get_object("addaction")
 		ev = widget.connect("button-press-event", self.AddMod)
 		self.Events.append([widget, ev])
 		# Set up widgets
-		widget = self.wTree.get_widget("modlbl")
+		widget = self.wTree.get_object("modlbl")
 		widget.set_markup("<b>Modifying Action for " + self.Button.Name + "</b>")
 		# Set contents of text box
-		widget = self.wTree.get_widget("ModifyAction")
+		widget = self.wTree.get_object("ModifyAction")
 		widget.set_text("")
 		ev = widget.connect("changed",self.CheckValidity)
 		self.Events.append([widget, ev])
 		# Configure radio buttons
-		widget0 = self.wTree.get_widget("rb1")
+		widget0 = self.wTree.get_object("rb1")
 		ev = widget0.connect("toggled",self.ChangeState)
 		self.Events.append([widget0, ev])
-		widget1 = self.wTree.get_widget("rb2")
+		widget1 = self.wTree.get_object("rb2")
 		ev = widget1.connect("toggled",self.ChangeState)
 		self.Events.append([widget1, ev])
-		widget2 = self.wTree.get_widget("rb3")
+		widget1.join_group(widget0)
+		widget2 = self.wTree.get_object("rb3")
 		ev = widget2.connect("toggled",self.ChangeState)
 		self.Events.append([widget2, ev])
+		widget2.join_group(widget0)
 		widget0.set_active(False)
 		widget1.set_active(False)
 		widget2.set_active(False)
@@ -400,24 +414,24 @@ class ModifyAction:
 
 		# Show Window
 		self.window.show_all()
-		gtk.main()
+		Gtk.main()
 
 	def ChangeState(self,widget):
-		if widget == self.wTree.get_widget("rb1"):
+		if widget == self.wTree.get_object("rb1"):
 			self.UpdateActiveRegion(0)
-		elif widget == self.wTree.get_widget("rb2"):
+		elif widget == self.wTree.get_object("rb2"):
 			self.UpdateActiveRegion(1)
 		else:
 			self.UpdateActiveRegion(2)
 
 	def AddMod(self,widget,event):
-		widget = self.wTree.get_widget("availkeys")
-		widget2 = self.wTree.get_widget("ModifyAction")
+		widget = self.wTree.get_object("availkeys")
+		widget2 = self.wTree.get_object("ModifyAction")
 		widget2.set_text(widget.get_model()[widget.get_active()][0]+" "+widget2.get_text())
 		self.CheckValidity(widget2)
 
 	def CheckValidity(self,widget):
-		notice = self.wTree.get_widget("isvalid")
+		notice = self.wTree.get_object("isvalid")
 		if self.xSetWacomObject.VerifyString(widget.get_text())==1:
 			notice.hide()
 		else:
@@ -428,43 +442,43 @@ class ModifyAction:
 		#1 = Mouse
 		#2 = Kbd
 		if index == 0:
-			widget = self.wTree.get_widget("MouseConfig")
+			widget = self.wTree.get_object("MouseConfig")
 			widget.set_sensitive(False)
-			widget = self.wTree.get_widget("KeyConfig")
+			widget = self.wTree.get_object("KeyConfig")
 			widget.set_sensitive(False)
 		elif index == 1:
-			widget = self.wTree.get_widget("MouseConfig")
+			widget = self.wTree.get_object("MouseConfig")
 			widget.set_sensitive(True)
-			widget = self.wTree.get_widget("KeyConfig")
+			widget = self.wTree.get_object("KeyConfig")
 			widget.set_sensitive(False)
 		else:
-			widget = self.wTree.get_widget("MouseConfig")
+			widget = self.wTree.get_object("MouseConfig")
 			widget.set_sensitive(False)
-			widget = self.wTree.get_widget("KeyConfig")
+			widget = self.wTree.get_object("KeyConfig")
 			widget.set_sensitive(True)
 	
 	def UpdateForm(self):
 		if self.xSetWacomObject.GetTypeAndName(self.SelectedItem,self.Button.Callsign)[0] == 0:
 			pass
 		elif self.xSetWacomObject.GetTypeAndName(self.SelectedItem,self.Button.Callsign)[0] == 1:
-			widget = self.wTree.get_widget("MouseConfig")
+			widget = self.wTree.get_object("MouseConfig")
 			i = 0
 			for item in widget.get_model():
 				if item[1] == self.xSetWacomObject.GetTypeAndName(self.SelectedItem,self.Button.Callsign)[1]:
 					widget.set_active(i)
 				i+=1
 		else:
-			widget = self.wTree.get_widget("ModifyAction")
+			widget = self.wTree.get_object("ModifyAction")
 			widget.set_text(self.xSetWacomObject.GetTypeAndName(self.SelectedItem,self.Button.Callsign)[1])	
 	
 	def CommitChanges(self):
-		if self.wTree.get_widget("rb1").get_active() == True:
+		if self.wTree.get_object("rb1").get_active() == True:
 			self.xSetWacomObject.SetByTypeAndName(self.SelectedItem,0,self.Button.Callsign)
-		elif self.wTree.get_widget("rb2").get_active() == True:
-			widget = self.wTree.get_widget("MouseConfig")
+		elif self.wTree.get_object("rb2").get_active() == True:
+			widget = self.wTree.get_object("MouseConfig")
 			self.xSetWacomObject.SetByTypeAndName(self.SelectedItem,1,self.Button.Callsign,widget.get_model()[widget.get_active()][1])
 		else:
-			widget = self.wTree.get_widget("ModifyAction")
+			widget = self.wTree.get_object("ModifyAction")
 			if self.xSetWacomObject.VerifyString(widget.get_text())==1:
 				self.xSetWacomObject.SetByTypeAndName(self.SelectedItem,2,self.Button.Callsign,widget.get_text())
 
@@ -475,7 +489,7 @@ class ModifyAction:
 		# code
 		for event in self.Events:
 			event[0].disconnect(event[1])
-		gtk.main_quit()
+		Gtk.main_quit()
 		self.window.hide()
 		
 		
